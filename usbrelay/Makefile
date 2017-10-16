@@ -9,16 +9,16 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=usbrelay
 PKG_VERSION:=0.1-2017-10-30
-PKG_REV:=9507922619e9b879a95a1ec0bfdf413c905fdcc3
+#PKG_REV:=9507922619e9b879a95a1ec0bfdf413c905fdcc3
 PKG_RELEASE:=1
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_URL:=https://github.com/artbern/usbrelay
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=$(PKG_REV)
+#PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+#PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+#PKG_SOURCE_URL:=https://github.com/artbern/usbrelay
+#PKG_SOURCE_PROTO:=git
+#PKG_SOURCE_VERSION:=$(PKG_REV)
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-0.1
+#PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-0.1
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -35,29 +35,34 @@ define Package/usbrelay/description
  USB Relay Controller
 endef
 
+BINARIES:= \
+	usb_relay
+
+define Build/Prepare
+	$(INSTALL_DIR) $(PKG_BUILD_DIR)
+	$(CP) $(foreach bin,$(BINARIES),./src/$(bin).c) \
+	    $(PKG_BUILD_DIR)
+endef
+
+
 define Build/Configure
 	$(SED) 's,/usr/include/usb.h,$(STAGING_DIR)/opt/include/usb.h,g' $(PKG_BUILD_DIR)/config.h
 	$(SED) 's,/usr/local/lib/_include_/hid.h,$(STAGING_DIR)/opt/include/hid.h,g' $(PKG_BUILD_DIR)/config.h
 endef
 
-TARGET_CFLAGS += \
-	-fPIC \
-	-DLANG_ENG 
-
 define Build/Compile
-    echo -e "\e[1;34m \nBuild/compile $(PKG_NAME)\n $<\e[0m" \
-            $(MAKE) $(MAKE_FLAGS) -C $(PKG_BUILD_DIR) \
-        DESTDIR="$(PKG_INSTALL_DIR)"
-	$(TARGET_CC) $(TARGET_CFLAGS) -c -I$(STAGING_DIR)/opt/include -D_GNU_SOURCE -D_BSD_SOURCE -o $(PKG_BUILD_DIR)/usbrelay.o $(PKG_BUILD_DIR)/usbrelay.c
-	$(TARGET_CC) $(TARGET_LDFLAGS) -L$(STAGING_DIR)/opt/lib -o $(PKG_BUILD_DIR)/usbrelay \
-		$(PKG_BUILD_DIR)/usbrelay.o \
-		-llibhid
+	for bin in $(BINARIES); \
+	do \
+	    $(TARGET_CC) $(TARGET_CFLAGS) -I$(STAGING_DIR)/opt/include \
+	    $(TARGET_LDFLAGS) -L$(STAGING_DIR)/opt/lib -lusb -s \
+	    -o $(PKG_BUILD_DIR)/$$$${bin} $(PKG_BUILD_DIR)/$$$${bin}.c; \
+	done
 endef
 
 define Package/usbrelay/install
-	$(INSTALL_DIR) $(1)/opt/lib/usbrelay
-	$(INSTALL_DIR) $(1)/opt/sbin
-	$(INSTALL_DIR) $(1)/opt/etc/usbrelay
+	$(INSTALL_DIR) $(1)/opt/bin
+	$(INSTALL_BIN) $(foreach bin,$(BINARIES),$(PKG_BUILD_DIR)/$(bin)) \
+	    $(1)/opt/bin
 endef
 
 $(eval $(call BuildPackage,usbrelay))
