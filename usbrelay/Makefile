@@ -32,14 +32,21 @@ define Package/usbrelay
 endef
 
 define Package/usbrelay/description
- USB Relay 
  USB Relay Controller
 endef
 
-define Build/Configure
-	$(SED) 's,/usr/include/usb.h,$(STAGING_DIR)/opt/include/usb.h,g' $(PKG_BUILD_DIR)/config.h
-	$(SED) 's,/usr/local/lib/_include_/hid.h,$(STAGING_DIR)/opt/include/hid.h,g' $(PKG_BUILD_DIR)/config.h
-endef
+
+define Build/Compile
+	$(TARGET_CC) $(TARGET_CFLAGS) -c -I$(STAGING_DIR)/opt/include -D_GNU_SOURCE -D_BSD_SOURCE -o $(PKG_BUILD_DIR)/usbrelay.o $(PKG_BUILD_DIR)/usbrelay.c
+	$(TARGET_CC) $(TARGET_LDFLAGS) -L$(STAGING_DIR)/opt/lib -o $(PKG_BUILD_DIR)/usbrelay \
+		$(PKG_BUILD_DIR)/usbrelay.o \
+		-llibhid
+endef		
+
+#define Build/Configure
+##	$(SED) 's,/usr/include/usb.h,$(STAGING_DIR)/opt/include/usb.h,g' $(PKG_BUILD_DIR)/config.h
+#	$(SED) 's,/usr/local/lib/_include_/hid.h,$(STAGING_DIR)/opt/include/hid.h,g' $(PKG_BUILD_DIR)/config.h
+#endef
 
 TARGET_CFLAGS += \
 	-fPIC \
