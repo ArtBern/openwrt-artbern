@@ -25,7 +25,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/usbrelay
 	SECTION:=utils
 	CATEGORY:=Utilities
-	DEPENDS:=+libhid 
+	DEPENDS:=+libhid
 	TITLE:=USB Relay Controller
 	URL:=https://github.com/artbern/usbrelay
 	MAINTAINER:=Artem Bernadsky
@@ -35,26 +35,24 @@ define Package/usbrelay/description
  USB Relay Controller
 endef
 
+define Build/Configure
+	$(SED) 's,/usr/include/usb.h,$(STAGING_DIR)/opt/include/usb.h,g' $(PKG_BUILD_DIR)/config.h
+	$(SED) 's,/usr/local/lib/_include_/hid.h,$(STAGING_DIR)/opt/include/hid.h,g' $(PKG_BUILD_DIR)/config.h
+endef
+
+TARGET_CFLAGS += \
+	-fPIC \
+	-DLANG_ENG 
 
 define Build/Compile
+    echo -e "\e[1;34m \nBuild/compile $(PKG_NAME)\n $<\e[0m" \
+            $(MAKE) $(MAKE_FLAGS) -C $(PKG_BUILD_DIR) \
+        DESTDIR="$(PKG_INSTALL_DIR)"
 	$(TARGET_CC) $(TARGET_CFLAGS) -c -I$(STAGING_DIR)/opt/include -D_GNU_SOURCE -D_BSD_SOURCE -o $(PKG_BUILD_DIR)/usbrelay.o $(PKG_BUILD_DIR)/usbrelay.c
 	$(TARGET_CC) $(TARGET_LDFLAGS) -L$(STAGING_DIR)/opt/lib -o $(PKG_BUILD_DIR)/usbrelay \
 		$(PKG_BUILD_DIR)/usbrelay.o \
 		-llibhid
-endef		
-
-#define Build/Configure
-##	$(SED) 's,/usr/include/usb.h,$(STAGING_DIR)/opt/include/usb.h,g' $(PKG_BUILD_DIR)/config.h
-#	$(SED) 's,/usr/local/lib/_include_/hid.h,$(STAGING_DIR)/opt/include/hid.h,g' $(PKG_BUILD_DIR)/config.h
-#endef
-
-TARGET_CFLAGS += \
-	-fPIC \
-	-DLANG_ENG \
-
-#define Package/usbrelay/conffiles
-#/opt/etc/wmr/wmr.conf
-#endef
+endef
 
 define Package/usbrelay/install
 	$(INSTALL_DIR) $(1)/opt/lib/usbrelay
