@@ -48,6 +48,9 @@ pthread_mutex_t job_mutex;
 #define WMR_VENDOR_ID  0x16c0
 #define WMR_PRODUCT_ID 0x05df
 
+#define ON 0xff
+#define OFF 0xfd
+
 #define WMR_EXIT_FAILURE	-1
 #define WMR_EXIT_NORMAL		1
 #define WMR_EXIT_SUCCESS	0
@@ -190,16 +193,16 @@ int wmr_send_packet_init(WMR *wmr) {
     ret = hid_set_output_report(wmr->hid, PATH_IN, PATHLEN, (char*)INIT_PACKET1, sizeof(INIT_PACKET1));
     if (ret != HID_RET_SUCCESS) 
     {
-	if( wmr->debugEn > 0 )
-	{
-	    sprintf (err_string, WMR_C_TXT_2, ret);
-	    syslog_msg (wmr->syslogEn, err_string);
-	}
+		if( wmr->debugEn > 0 )
+		{
+			sprintf (err_string, WMR_C_TXT_2, ret);
+			syslog_msg (wmr->syslogEn, err_string);
+		}
 
-    return WMR_EXIT_NORMAL;
+		return WMR_EXIT_NORMAL;
     }
 
-return WMR_EXIT_SUCCESS;
+	return WMR_EXIT_SUCCESS;
 }
 
 int wmr_send_packet_ready(WMR *wmr) {
@@ -272,29 +275,29 @@ int wmr_init(WMR *wmr)
 
     if (ret != HID_RET_SUCCESS) 
     {
-	if( wmr->debugEn > 0 )
-	{
-	    sprintf (err_string, WMR_C_TXT_7, ret);
-	    syslog_msg (wmr->syslogEn, err_string);
-	}
+		if( wmr->debugEn > 0 )
+		{
+			sprintf (err_string, WMR_C_TXT_7, ret);
+			syslog_msg (wmr->syslogEn, err_string);
+		}
 
-    return WMR_EXIT_NORMAL;
+		return WMR_EXIT_NORMAL;
     }
 
     ret = hid_write_identification(stdout, wmr->hid);
     if (ret != HID_RET_SUCCESS) 
     {
-	if( wmr->debugEn > 0 )
-	{
-	    sprintf (err_string, WMR_C_TXT_8, ret);
-	    syslog_msg (wmr->syslogEn, err_string);
-	}
+		if( wmr->debugEn > 0 )
+		{
+			sprintf (err_string, WMR_C_TXT_8, ret);
+			syslog_msg (wmr->syslogEn, err_string);
+		}
 
-    return WMR_EXIT_NORMAL;
+		return WMR_EXIT_NORMAL;
     }
 
-    if ( wmr_send_packet_init(wmr) != 0 )  { return WMR_EXIT_NORMAL; }
-    if ( wmr_send_packet_ready(wmr) != 0 ) { return WMR_EXIT_NORMAL; }
+    //if ( wmr_send_packet_init(wmr) != 0 )  { return WMR_EXIT_NORMAL; }
+    //if ( wmr_send_packet_ready(wmr) != 0 ) { return WMR_EXIT_NORMAL; }
 
     return WMR_EXIT_SUCCESS;
 }
@@ -339,11 +342,11 @@ int wmr_read_byte(WMR *wmr)
 {
     while(wmr->remain == 0) 
     {
-	if(wmr_read_packet(wmr) == WMR_EXIT_FAILURE) { return(WMR_EXIT_FAILURE); }
+		if(wmr_read_packet(wmr) == WMR_EXIT_FAILURE) { return(WMR_EXIT_FAILURE); }
     }
     wmr->remain--;
 
-return wmr->buffer[wmr->pos++];
+	return wmr->buffer[wmr->pos++];
 }
 
 int verify_checksum(unsigned char * buf, int len, int syslogEn, int debugEn ) 
