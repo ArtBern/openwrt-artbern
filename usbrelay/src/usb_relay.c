@@ -556,12 +556,10 @@ int main(int argc, char* argv[])
          }
 */
 	wmr_read_data(wmr);
+	
+	sprintf (err_string, WMR_C_TXT_21, 0);
+	syslog_msg (0, err_string);
 
-     printf("All done, closing device and HIDAPI objects!\n\n");
-     /*
-	 hid_close(handle);
-     hid_exit();
-		*/
 	if (wmr != NULL) { wmr_close(wmr); }
 	
     return 0;
