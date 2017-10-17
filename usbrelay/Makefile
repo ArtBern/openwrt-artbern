@@ -37,7 +37,7 @@ endef
 
 HEADERS:= \
 	wmr_wmr \
-	src\lang_en
+	lang_en
 	
 BINARIES:= \
 	usb_relay
