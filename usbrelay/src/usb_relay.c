@@ -205,24 +205,6 @@ int wmr_send_packet_init(WMR *wmr) {
 	return WMR_EXIT_SUCCESS;
 }
 
-int wmr_send_packet_init(WMR *wmr) {
-    int ret;
-
-    ret = hid_set_output_report(wmr->hid, PATH_IN, PATHLEN, (char*)INIT_PACKET1, sizeof(INIT_PACKET1));
-    if (ret != HID_RET_SUCCESS) 
-    {
-		if( wmr->debugEn > 0 )
-		{
-			sprintf (err_string, WMR_C_TXT_2, ret);
-			syslog_msg (wmr->syslogEn, err_string);
-		}
-
-		return WMR_EXIT_NORMAL;
-    }
-
-	return WMR_EXIT_SUCCESS;
-}
-
 int wmr_send_packet_ready(WMR *wmr) {
     int ret;
     
