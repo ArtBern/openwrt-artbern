@@ -59,10 +59,11 @@ int const PATH_OUT[]		= { 0xff000001, 0xff000002 };
 unsigned char const INIT_PACKET1[] = { 0x20, 0x00, 0x08, 0x01, 0x00, 0x00, 0x00, 0x00 };
 unsigned char const INIT_PACKET2[] = { 0x01, 0xd0, 0x08, 0x01, 0x00, 0x00, 0x00, 0x00 };
 
-#    extern WMR *wmr_new( void );
-#    extern int wmr_close( WMR * );
-#    extern void wmr_print_state( unsigned int, int );
-
+/*
+    extern WMR *wmr_new( void );
+    extern int wmr_close( WMR * );
+    extern void wmr_print_state( unsigned int, int );
+*/
 	
 WMR *wmr_new( void )
 {
@@ -85,7 +86,7 @@ WMR *wmr_new( void )
       return NULL;
     }
 
-    wmr->data_fh                = NULL;
+    //wmr->data_fh                = NULL;
     wmr->data_filename          = malloc(CNF_PATH_SIZE);
     wmr->db_name                = malloc(CNF_PATH_SIZE);
     wmr->conf_path              = malloc(CNF_PATH_SIZE);
