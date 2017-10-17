@@ -16,8 +16,6 @@
 #ifndef _WMR_LOGGER_STRUCT_WMR_H
 #define _WMR_LOGGER_STRUCT_WMR_H
 
-#include "../config.h"
-
 /* structure */
 typedef struct _WMR {
     int pos;
