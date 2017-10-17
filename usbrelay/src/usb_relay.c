@@ -10,6 +10,9 @@
 #include <signal.h>
 #include <time.h>
 #include <unistd.h>
+#include <pthread.h>
+#include <sys/shm.h>
+#include <sys/ipc.h>
 
 #include <usb.h>
 #include <hid.h>
@@ -33,6 +36,103 @@ typedef union  HIDPacketStruct {
          } Rx;
         } HIDPacketStruct, *pHIDPacketStruct;
 */
+
+char err_string[1024];
+pthread_mutex_t job_mutex;
+
+#define WMR_VENDOR_ID  0xfc5
+#define WMR_PRODUCT_ID 0xb080
+
+#define WMR_EXIT_FAILURE	-1
+#define WMR_EXIT_NORMAL		1
+#define WMR_EXIT_SUCCESS	0
+#define WMR_EXIT_KILL		9
+
+int const RECV_PACKET_LEN	= 8;
+unsigned char const PATHLEN	= 2;
+int const PATH_IN[]		= { 0xff000001, 0xff000001 };
+int const PATH_OUT[]		= { 0xff000001, 0xff000002 };
+unsigned char const INIT_PACKET1[] = { 0x20, 0x00, 0x08, 0x01, 0x00, 0x00, 0x00, 0x00 };
+unsigned char const INIT_PACKET2[] = { 0x01, 0xd0, 0x08, 0x01, 0x00, 0x00, 0x00, 0x00 };
+
+    extern WMR *wmr_new( void );
+    extern int wmr_close( WMR * );
+    extern void wmr_print_state( unsigned int, int );
+
+	
+WMR *wmr_new( void )
+{
+
+    pthread_mutex_lock(&job_mutex);
+
+    WMR *wmr = malloc(sizeof(WMR));
+    if (wmr == NULL)
+    {
+        return NULL;
+    }
+
+    memset(wmr, 0, sizeof(WMR));
+
+    wmr->remain = 0;
+    wmr->buffer = malloc(BUF_SIZE);
+    if (wmr->buffer == NULL)
+    {
+      free(wmr);
+      return NULL;
+    }
+
+    wmr->data_fh                = NULL;
+    wmr->data_filename          = malloc(CNF_PATH_SIZE);
+    wmr->db_name                = malloc(CNF_PATH_SIZE);
+    wmr->conf_path              = malloc(CNF_PATH_SIZE);
+    wmr->rrdtool_exec_path      = malloc(CNF_PATH_SIZE);
+    wmr->rrdtool_save_path      = malloc(CNF_PATH_SIZE);
+    wmr->logrotate_path         = malloc(CNF_PATH_SIZE);
+    wmr->alarm_path             = malloc(CNF_PATH_SIZE);
+    wmr->lock_file              = malloc(CNF_PATH_SIZE);
+    wmr->curtime                = malloc(STR_TIME_SIZE);
+    wmr->upd_exec_path          = malloc(CNF_PATH_SIZE);
+
+    //strcpy(wmr->conf_path,  WMR_CONFG_FILE );
+
+pthread_mutex_unlock(&job_mutex);
+return wmr;
+}
+
+int wmr_close( WMR *wmr )
+{
+    hid_return ret;
+
+    pthread_mutex_lock(&job_mutex);
+
+    if(wmr->hid)
+    {
+        ret = hid_close(wmr->hid);
+        if (ret != HID_RET_SUCCESS)
+        {
+        sprintf (err_string, WMR_UTIL_C_TXT_15, ret);
+        syslog_msg (wmr->syslogEn, err_string);
+        return WMR_EXIT_NORMAL;
+        }
+
+        hid_delete_HIDInterface(&wmr->hid);
+        wmr->hid = NULL;
+
+        ret = hid_cleanup();
+        if (ret != HID_RET_SUCCESS)
+        {
+        sprintf (err_string, WMR_UTIL_C_TXT_16, ret);
+        syslog_msg (wmr->syslogEn, err_string);
+        return WMR_EXIT_NORMAL;
+        }
+    }
+
+free(wmr);
+pthread_mutex_unlock(&job_mutex);
+
+return WMR_EXIT_SUCCESS;
+}
+	
 
 void dump_packet(unsigned char *packet, int len, int syslogEn)
 {
@@ -175,15 +275,15 @@ int wmr_read_packet(WMR *wmr)
 
     if (ret != HID_RET_SUCCESS) 
     {
-	if( wmr->debugEn > 0 )
-	{
-	    sprintf (err_string, WMR_C_TXT_9, ret);
-	    syslog_msg (wmr->syslogEn, err_string);
-	}
-	//exit(WMR_EXIT_FAILURE);
-	run = RR_WMR_PREEXIT;
+		if( wmr->debugEn > 0 )
+		{
+			sprintf (err_string, WMR_C_TXT_9, ret);
+			syslog_msg (wmr->syslogEn, err_string);
+		}
+		exit(WMR_EXIT_FAILURE);
+		//run = RR_WMR_PREEXIT;
 
-    return(WMR_EXIT_FAILURE);
+		return(WMR_EXIT_FAILURE);
     }
     
     len = wmr->buffer[0];
@@ -193,7 +293,7 @@ int wmr_read_packet(WMR *wmr)
     
     if( wmr->debugEn > 3 )
     {
-	dump_packet(wmr->buffer + 1, wmr->remain, wmr->syslogEn);
+		dump_packet(wmr->buffer + 1, wmr->remain, wmr->syslogEn);
     }
 
 return(WMR_EXIT_SUCCESS);
@@ -240,7 +340,7 @@ void wmr_read_data(WMR *wmr/*, WEATHER *weather*/)
 
     /* search for 0xff marker */
     i = wmr_read_byte(wmr);
-    if ( i == WMR_EXIT_FAILURE) { run = RR_WMR_PREEXIT; return; }
+    if ( i == WMR_EXIT_FAILURE) { return; }
 
     while(i != 0xff) 
     {
@@ -314,6 +414,12 @@ void wmr_read_data(WMR *wmr/*, WEATHER *weather*/)
     wmr_send_packet_ready(wmr);
 }
 
+void wmr_print_state( unsigned int usb_hid, int syslogEn )
+// void wmr_print_state( HIDInterface *usb_hid, int syslogEn )
+{
+  sprintf (err_string, "- WMR->HID: %08x\n", usb_hid);
+  syslog_msg (syslogEn, err_string);
+}
 
 int main(int argc, char* argv[])
 {
@@ -346,7 +452,7 @@ int main(int argc, char* argv[])
         //pthread_mutex_unlock(&job_mutex);
 		exit(WMR_EXIT_FAILURE);
     }
-
+	wmr->debugEn=9;
      // Open the device using the VID, PID,
 	 /*
      handle = hid_open(0xfc5, 0xb080, NULL);
@@ -358,7 +464,6 @@ int main(int argc, char* argv[])
 	if ( wmr_init(wmr) != 0) 
 	{
 		syslog_msg (0, WMR_C_TXT_23 );
-		run = RR_WMR_PREEXIT;
 	} else {
 		sprintf (err_string, WMR_C_TXT_24, wmr->hid->id);
 		syslog_msg (0, err_string);
