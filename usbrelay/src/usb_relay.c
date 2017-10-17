@@ -11,6 +11,9 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <usb.h>
+#include <hid.h>
+
 #include "wmr_wmr.h"
 #include "lang/lang_en.h"
 

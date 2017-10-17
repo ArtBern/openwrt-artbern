@@ -35,6 +35,10 @@ define Package/usbrelay/description
  USB Relay Controller
 endef
 
+HEADERS:= \
+	wmr_wmr \
+	src\lang_en
+	
 BINARIES:= \
 	usb_relay
 
@@ -42,19 +46,21 @@ define Build/Prepare
 	$(INSTALL_DIR) $(PKG_BUILD_DIR)
 	$(CP) $(foreach bin,$(BINARIES),./src/$(bin).c) \
 	    $(PKG_BUILD_DIR)
+	$(CP) $(foreach head,$(HEADERS),./src/$(head).h) \
+	    $(PKG_BUILD_DIR)
 endef
 
 
 define Build/Configure
-    $(SED) 's,/usr/include/usb.h,$(STAGING_DIR)/opt/include/usb.h,g' $(PKG_BUILD_DIR)/config.h
-	$(SED) 's,/usr/local/lib/_include_/hid.h,$(STAGING_DIR)/opt/include/hid.h,g' $(PKG_BUILD_DIR)/config.h
+#    $(SED) 's,/usr/include/usb.h,$(STAGING_DIR)/opt/include/usb.h,g' $(PKG_BUILD_DIR)/config.h
+#	$(SED) 's,/usr/local/lib/_include_/hid.h,$(STAGING_DIR)/opt/include/hid.h,g' $(PKG_BUILD_DIR)/config.h
 endef
 
 define Build/Compile
 	for bin in $(BINARIES); \
 	do \
 	    $(TARGET_CC) $(TARGET_CFLAGS) -I$(STAGING_DIR)/opt/include \
-	    $(TARGET_LDFLAGS) -L$(STAGING_DIR)/opt/lib -lusb -s \
+	    $(TARGET_LDFLAGS) -L$(STAGING_DIR)/opt/lib -lusb -lhid -s \
 	    -o $(PKG_BUILD_DIR)/$$$${bin} $(PKG_BUILD_DIR)/$$$${bin}.c; \
 	done
 endef
