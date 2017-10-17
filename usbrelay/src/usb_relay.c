@@ -59,7 +59,7 @@ pthread_mutex_t job_mutex;
 int const RECV_PACKET_LEN	= 8;
 unsigned char const PATHLEN	= 2;
 int const PATH_IN[]		= { 0xff000001, 0xff000000 };
-int const PATH_OUT[]		= { 0xff000001, 0xff000002 };
+int const PATH_OUT[]	= { 0xff000001, 0xff000000 };
 unsigned char const INIT_PACKET1[] = { 0x0, ON, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
 unsigned char const INIT_PACKET2[] = { 0x01, 0xd0, 0x08, 0x01, 0x00, 0x00, 0x00, 0x00 };
 
@@ -315,11 +315,15 @@ int wmr_read_packet(WMR *wmr)
 {
     int ret, len;
 
+	/*
     ret = hid_interrupt_read(wmr->hid,
 			     USB_ENDPOINT_IN + 1,
 			     (char*)wmr->buffer,
 			     RECV_PACKET_LEN,
 			     0);
+	*/
+	
+	ret = hid_get_input_report(wmr->hid, PATH_OUT, PATHLEN, (char*)wmr->buffer, RECV_PACKET_LEN);
 
     if (ret != HID_RET_SUCCESS) 
     {
@@ -567,7 +571,7 @@ int main(int argc, char* argv[])
 	sprintf (err_string, WMR_C_TXT_21, 0);
 	syslog_msg (0, err_string);
 
-	wmr_read_data(wmr);
+	wmr_read_packet(wmr);
 	
 	sprintf (err_string, WMR_C_TXT_21, 0);
 	syslog_msg (0, err_string);
