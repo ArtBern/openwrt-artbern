@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <syslog.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <string.h>
@@ -65,6 +66,24 @@ unsigned char const INIT_PACKET2[] = { 0x01, 0xd0, 0x08, 0x01, 0x00, 0x00, 0x00,
     extern void wmr_print_state( unsigned int, int );
 */
 	
+void syslog_msg ( int syslogEn, char *msg_string) 
+{
+	switch(syslogEn)
+	{
+		case 0:
+			printf( (char *) msg_string );
+			break;
+		case 1:
+			openlog ("wmrd", LOG_PID | LOG_CONS, LOG_DAEMON);
+			syslog (LOG_NOTICE, (char *) msg_string);
+			closelog();
+			break;
+		case 2:
+			fprintf(stderr,(char *) msg_string );
+			fflush(stderr);
+			break;
+	}
+}	
 WMR *wmr_new( void )
 {
 
