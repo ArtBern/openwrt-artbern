@@ -58,9 +58,9 @@ pthread_mutex_t job_mutex;
 
 int const RECV_PACKET_LEN	= 8;
 unsigned char const PATHLEN	= 2;
-int const PATH_IN[]		= { 0xff000001, 0xff000001 };
+int const PATH_IN[]		= { 0xff000001, 0xff000000 };
 int const PATH_OUT[]		= { 0xff000001, 0xff000002 };
-unsigned char const INIT_PACKET1[] = { 0x20, 0x00, 0x08, 0x01, 0x00, 0x00, 0x00, 0x00 };
+unsigned char const INIT_PACKET1[] = { 0x0, ON, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
 unsigned char const INIT_PACKET2[] = { 0x01, 0xd0, 0x08, 0x01, 0x00, 0x00, 0x00, 0x00 };
 
 /*
@@ -205,6 +205,24 @@ int wmr_send_packet_init(WMR *wmr) {
 	return WMR_EXIT_SUCCESS;
 }
 
+int wmr_send_packet_init(WMR *wmr) {
+    int ret;
+
+    ret = hid_set_output_report(wmr->hid, PATH_IN, PATHLEN, (char*)INIT_PACKET1, sizeof(INIT_PACKET1));
+    if (ret != HID_RET_SUCCESS) 
+    {
+		if( wmr->debugEn > 0 )
+		{
+			sprintf (err_string, WMR_C_TXT_2, ret);
+			syslog_msg (wmr->syslogEn, err_string);
+		}
+
+		return WMR_EXIT_NORMAL;
+    }
+
+	return WMR_EXIT_SUCCESS;
+}
+
 int wmr_send_packet_ready(WMR *wmr) {
     int ret;
     
@@ -230,10 +248,10 @@ int wmr_init(WMR *wmr)
     int retries;
 
     /* see include/debug.h for possible values */
-    /*hid_set_debug(HID_DEBUG_ALL);*/
-    /*hid_set_debug_stream(stderr);*/
+    hid_set_debug(HID_DEBUG_ALL);
+    hid_set_debug_stream(stderr);
     /* passed directly to libusb */
-    /*hid_set_usb_debug(0);*/
+    hid_set_usb_debug(0);
 
     ret = hid_init();
     if (ret != HID_RET_SUCCESS) 
@@ -295,8 +313,17 @@ int wmr_init(WMR *wmr)
 
 		return WMR_EXIT_NORMAL;
     }
+	
+	ret = hid_dump_tree(stdout, wmr->hid);
+	if (ret != HID_RET_SUCCESS) {
+		if( wmr->debugEn > 0 )
+		{
+			sprintf(err_string, "hid_dump_tree failed with return code %d\n", ret);
+			syslog_msg (wmr->syslogEn, err_string);
+		}
+	}	
 
-    //if ( wmr_send_packet_init(wmr) != 0 )  { return WMR_EXIT_NORMAL; }
+    if ( wmr_send_packet_init(wmr) != 0 )  { return WMR_EXIT_NORMAL; }
     //if ( wmr_send_packet_ready(wmr) != 0 ) { return WMR_EXIT_NORMAL; }
 
     return WMR_EXIT_SUCCESS;
@@ -555,6 +582,9 @@ int main(int argc, char* argv[])
          hid_send_feature_report(handle, MyPacket.Data, 8);    // Send it
          }
 */
+	sprintf (err_string, WMR_C_TXT_21, 0);
+	syslog_msg (0, err_string);
+
 	wmr_read_data(wmr);
 	
 	sprintf (err_string, WMR_C_TXT_21, 0);
