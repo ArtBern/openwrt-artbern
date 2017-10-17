@@ -45,8 +45,8 @@ pthread_mutex_t job_mutex;
 #define BUF_SIZE 255
 #define STR_TIME_SIZE 16
 
-#define WMR_VENDOR_ID  0xfc5
-#define WMR_PRODUCT_ID 0xb080
+#define WMR_VENDOR_ID  0x16c0
+#define WMR_PRODUCT_ID 0x05df
 
 #define WMR_EXIT_FAILURE	-1
 #define WMR_EXIT_NORMAL		1
@@ -259,15 +259,15 @@ int wmr_init(WMR *wmr)
     while(retries > 0) 
     {
         ret = hid_force_open(wmr->hid, 0, &matcher, 10);
-	if (ret == HID_RET_SUCCESS) break;
+		if (ret == HID_RET_SUCCESS) break;
 
-	if( wmr->debugEn > 0 )
-	{
-	    syslog_msg (wmr->syslogEn, WMR_C_TXT_6 );
-	}
-	sleep(5);
+		if( wmr->debugEn > 0 )
+		{
+			syslog_msg (wmr->syslogEn, WMR_C_TXT_6 );
+		}
+		sleep(5);
 
-	--retries;
+		--retries;
     }
 
     if (ret != HID_RET_SUCCESS) 
