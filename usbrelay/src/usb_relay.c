@@ -157,6 +157,18 @@ pthread_mutex_unlock(&job_mutex);
 return WMR_EXIT_SUCCESS;
 }
 	
+void get_curtime( char ** curtime )
+{
+    char tstr[16];
+    time_t t;
+    struct tm *tmp;
+
+    t = time(NULL);
+    tmp = gmtime(&t);
+    strftime(tstr, sizeof(tstr), "%Y%m%d%H%M%S", tmp);
+    memcpy( *curtime, tstr, STR_TIME_SIZE);
+
+}
 
 void dump_packet(unsigned char *packet, int len, int syslogEn)
 {
