@@ -40,6 +40,10 @@ typedef union  HIDPacketStruct {
 char err_string[1024];
 pthread_mutex_t job_mutex;
 
+#define CNF_PATH_SIZE 255
+#define BUF_SIZE 255
+#define STR_TIME_SIZE 16
+
 #define WMR_VENDOR_ID  0xfc5
 #define WMR_PRODUCT_ID 0xb080
 
