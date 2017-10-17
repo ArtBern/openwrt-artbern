@@ -15,7 +15,7 @@
 #include <hid.h>
 
 #include "wmr_wmr.h"
-#include "lang/lang_en.h"
+#include "lang_en.h"
 
 /*
 typedef union  HIDPacketStruct {
