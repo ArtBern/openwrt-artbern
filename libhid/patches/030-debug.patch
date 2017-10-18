@@ -1,4 +1,4 @@
---- a/hidparser/hidparser.c
+﻿--- a/hidparser/hidparser.c
 +++ b/hidparser/hidparser.c
 @@ -24,6 +24,7 @@
  
@@ -8,7 +8,7 @@
  #include "hidparser.h"
  
  /* to be implemented for DEBUG purpose */
-@@ -343,8 +344,15 @@ int FindObject(HIDParser* pParser, HIDData* pData)
+@@ -343,8 +344,25 @@ int FindObject(HIDParser* pParser, HIDData* pData)
  {
    HIDData FoundData;
    ResetParser(pParser);
@@ -17,10 +17,20 @@
 +  
    while(HIDParse(pParser, &FoundData))
    {
-+	  printf("FoundData 0x%08x \n", (FoundData.Path.Node.UPage << 16)
-+          | FoundData.Path.Node.Usage);
-+	  printf("pData 0x%08x \n", (pData->Path.Node.UPage << 16)
-+          | pData->Path.Node.Usage);
++
++	  if (pData->Path.Size>0){
++		  printf("FoundData0 0x%08x \n", (FoundData.Path.Node[0].UPage << 16)
++			  | FoundData.Path.Node[0].Usage);
++		  printf("pData0 0x%08x \n", (pData->Path.Node[0].UPage << 16)
++			  | pData->Path.Node[0].Usage);
++	  }
++	  if (pData->Path.Size>1){
++		  printf("FoundData1 0x%08x \n", (FoundData.Path.Node[1].UPage << 16)
++			  | FoundData.Path.Node[1].Usage);
++		  printf("pData1 0x%08x \n", (pData->Path.Node[1].UPage << 16)
++			  | pData->Path.Node[1].Usage);
++	  }
++	  
      if(pData->Path.Size>0 && 
        FoundData.Type==pData->Type &&
        memcmp(FoundData.Path.Node, pData->Path.Node, (pData->Path.Size)*sizeof(HIDNode))==0)
