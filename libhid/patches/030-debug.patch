@@ -1,5 +1,5 @@
---- a/libhid-0.2.16/hidparser/hidparser.c
-+++ b/libhid-0.2.16/hidparser/hidparser.c
+--- a/hidparser/hidparser.c
++++ b/hidparser/hidparser.c
 @@ -24,6 +24,7 @@
  
  #include "config.h"
@@ -8,7 +8,7 @@
  #include "hidparser.h"
  
  /* to be implemented for DEBUG purpose */
-@@ -343,6 +344,9 @@ int FindObject(HIDParser* pParser, HIDData* pData)
+@@ -343,8 +344,15 @@ int FindObject(HIDParser* pParser, HIDData* pData)
  {
    HIDData FoundData;
    ResetParser(pParser);
@@ -17,4 +17,10 @@
 +  
    while(HIDParse(pParser, &FoundData))
    {
++	  printf("FoundData 0x%08x \n", (FoundData.Path.Node.UPage << 16)
++          | FoundData.Path.Node.Usage);
++	  printf("pData 0x%08x \n", (pData->Path.Node.UPage << 16)
++          | pData->Path.Node.Usage);
      if(pData->Path.Size>0 && 
+       FoundData.Type==pData->Type &&
+       memcmp(FoundData.Path.Node, pData->Path.Node, (pData->Path.Size)*sizeof(HIDNode))==0)
