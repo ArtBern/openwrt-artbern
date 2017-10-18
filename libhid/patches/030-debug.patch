@@ -30,8 +30,8 @@
 +		  printf("pData1     0x%08x \n", (pData->Path.Node[1].UPage << 16)
 +			  | pData->Path.Node[1].Usage);
 +	  }
-+	  fprintf("FoundData type: %u\n", FoundData.Type);
-+	  fprintf("pData     type: %u\n", pData->Type);
++	  printf("FoundData type: 0x%02x\n", FoundData.Type);
++	  printf("pData     type: 0x%02x\n", pData->Type);
 +	  
      if(pData->Path.Size>0 && 
        FoundData.Type==pData->Type &&
