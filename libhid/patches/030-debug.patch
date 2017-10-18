@@ -1,4 +1,4 @@
-﻿--- a/hidparser/hidparser.c
+--- a/hidparser/hidparser.c
 +++ b/hidparser/hidparser.c
 @@ -24,6 +24,7 @@
  
@@ -8,7 +8,7 @@
  #include "hidparser.h"
  
  /* to be implemented for DEBUG purpose */
-@@ -343,8 +344,25 @@ int FindObject(HIDParser* pParser, HIDData* pData)
+@@ -343,8 +344,27 @@ int FindObject(HIDParser* pParser, HIDData* pData)
  {
    HIDData FoundData;
    ResetParser(pParser);
@@ -21,7 +21,7 @@
 +	  if (pData->Path.Size>0){
 +		  printf("FoundData0 0x%08x \n", (FoundData.Path.Node[0].UPage << 16)
 +			  | FoundData.Path.Node[0].Usage);
-+		  printf("pData0 0x%08x \n", (pData->Path.Node[0].UPage << 16)
++		  printf("pData0     0x%08x \n", (pData->Path.Node[0].UPage << 16)
 +			  | pData->Path.Node[0].Usage);
 +	  }
 +	  if (pData->Path.Size>1){
@@ -30,8 +30,8 @@
 +		  printf("pData1 0x%08x \n", (pData->Path.Node[1].UPage << 16)
 +			  | pData->Path.Node[1].Usage);
 +	  }
-+	  printf("FoundData type: 0x%02x\n", FoundData.Type);
-+	  printf("pData     type: 0x%02x\n", pData->Type);
++	  fprintf("FoundData type: 0x%02x\n", FoundData.Type);
++	  fprintf("pData     type: 0x%02x\n", pData->Type);
 +	  
      if(pData->Path.Size>0 && 
        FoundData.Type==pData->Type &&
