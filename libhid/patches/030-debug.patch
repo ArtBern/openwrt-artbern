@@ -27,11 +27,11 @@
 +	  if (pData->Path.Size>1){
 +		  printf("FoundData1 0x%08x \n", (FoundData.Path.Node[1].UPage << 16)
 +			  | FoundData.Path.Node[1].Usage);
-+		  printf("pData1 0x%08x \n", (pData->Path.Node[1].UPage << 16)
++		  printf("pData1     0x%08x \n", (pData->Path.Node[1].UPage << 16)
 +			  | pData->Path.Node[1].Usage);
 +	  }
-+	  fprintf("FoundData type: 0x%02x\n", FoundData.Type);
-+	  fprintf("pData     type: 0x%02x\n", pData->Type);
++	  fprintf("FoundData type: %u\n", FoundData.Type);
++	  fprintf("pData     type: %u\n", pData->Type);
 +	  
      if(pData->Path.Size>0 && 
        FoundData.Type==pData->Type &&
