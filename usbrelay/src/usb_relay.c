@@ -349,7 +349,46 @@ int wmr_read_packet(WMR *wmr)
 		dump_packet(wmr->buffer + 1, wmr->remain, wmr->syslogEn);
     }
 
-return(WMR_EXIT_SUCCESS);
+	return(WMR_EXIT_SUCCESS);
+}
+int wmr_read_packet_feature(WMR *wmr)
+{
+    int ret, len;
+
+	/*
+    ret = hid_interrupt_read(wmr->hid,
+			     USB_ENDPOINT_IN + 1,
+			     (char*)wmr->buffer,
+			     RECV_PACKET_LEN,
+			     0);
+	*/
+	
+	ret = hid_get_feature_report(wmr->hid, PATH_OUT, PATHLEN, (char*)wmr->buffer, RECV_PACKET_LEN);
+
+    if (ret != HID_RET_SUCCESS) 
+    {
+		if( wmr->debugEn > 0 )
+		{
+			sprintf (err_string, WMR_C_TXT_9, ret);
+			syslog_msg (wmr->syslogEn, err_string);
+		}
+		exit(WMR_EXIT_FAILURE);
+		//run = RR_WMR_PREEXIT;
+
+		return(WMR_EXIT_FAILURE);
+    }
+    
+    len = wmr->buffer[0];
+    if (len > 7) len = 7; /* limit */
+    wmr->pos = 1;
+    wmr->remain = len;
+    
+    if( wmr->debugEn > 3 )
+    {
+		dump_packet(wmr->buffer + 1, wmr->remain, wmr->syslogEn);
+    }
+
+	return(WMR_EXIT_SUCCESS);
 }
 
 int wmr_read_byte(WMR *wmr)
@@ -573,8 +612,10 @@ int main(int argc, char* argv[])
 	syslog_msg (0, err_string);
 
 if ( wmr_read_packet(wmr) != 0 )  { return WMR_EXIT_NORMAL; }	
+if ( wmr_read_packet_feature(wmr) != 0 )  { return WMR_EXIT_NORMAL; }	
 if ( wmr_send_packet_init(wmr) != 0 )  { return WMR_EXIT_NORMAL; }
 if ( wmr_read_packet(wmr) != 0 )  { return WMR_EXIT_NORMAL; }	
+if ( wmr_read_packet_feature(wmr) != 0 )  { return WMR_EXIT_NORMAL; }	
 	
 	sprintf (err_string, WMR_C_TXT_21, 0);
 	syslog_msg (0, err_string);
