@@ -54,7 +54,11 @@ define Build/InstallDev
 	$(CP) $(PKG_INSTALL_DIR)/opt/lib/pkgconfig/libhid.pc $(1)/opt/lib/pkgconfig/
 endef
 
-define Package/libhid/install
+define Build/Compile
+	cd $(PKG_BUILD_DIR)/commandline/makemake; $(MAKE) 
+endef
+
+define Package/pavelusb/install
 	$(INSTALL_DIR) $(1)/opt/lib
 	$(CP) $(PKG_INSTALL_DIR)/opt/lib/libhid.so* $(1)/opt/lib
 	$(INSTALL_DIR) $(1)/opt/bin
