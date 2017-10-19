@@ -48,8 +48,8 @@ pthread_mutex_t job_mutex;
 #define WMR_VENDOR_ID  0x16c0
 #define WMR_PRODUCT_ID 0x05df
 
-#define ON 0xff
-#define OFF 0xfd
+#define ON 0xfe
+#define OFF 0xfc
 
 #define WMR_EXIT_FAILURE	-1
 #define WMR_EXIT_NORMAL		1
