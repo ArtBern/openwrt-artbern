@@ -59,7 +59,7 @@ pthread_mutex_t job_mutex;
 int const RECV_PACKET_LEN	= 8;
 unsigned char const PATHLEN	= 2;
 int const PATH_IN[]		= { 0xff000001, 0xff000000 };
-int const PATH_OUT[]	= { 0xff000001, 0xff000000 };
+int const PATH_OUT[]	= { 0xff000001, 0x00000000 };
 unsigned char const INIT_PACKET1[] = { 0x0, ON, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
 unsigned char const INIT_PACKET2[] = { 0x0, OFF, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
@@ -611,10 +611,8 @@ int main(int argc, char* argv[])
 	sprintf (err_string, WMR_C_TXT_21, 0);
 	syslog_msg (0, err_string);
 
-if ( wmr_read_packet(wmr) != 0 )  { return WMR_EXIT_NORMAL; }	
 if ( wmr_read_packet_feature(wmr) != 0 )  { return WMR_EXIT_NORMAL; }	
 if ( wmr_send_packet_init(wmr) != 0 )  { return WMR_EXIT_NORMAL; }
-if ( wmr_read_packet(wmr) != 0 )  { return WMR_EXIT_NORMAL; }	
 if ( wmr_read_packet_feature(wmr) != 0 )  { return WMR_EXIT_NORMAL; }	
 	
 	sprintf (err_string, WMR_C_TXT_21, 0);
