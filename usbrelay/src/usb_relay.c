@@ -59,7 +59,7 @@ pthread_mutex_t job_mutex;
 int const RECV_PACKET_LEN	= 8;
 unsigned char const PATHLEN	= 2;
 int const PATH_IN[]		= { 0xff000001, 0xff000000 };
-int const PATH_OUT[]	= { 0xff000001, 0x00000000 };
+int const PATH_OUT[]	= { 0xff000001, 0xff000000 };
 unsigned char const INIT_PACKET1[] = { 0x0, ON, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
 unsigned char const INIT_PACKET2[] = { 0x0, OFF, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
@@ -190,43 +190,8 @@ void dump_packet(unsigned char *packet, int len, int syslogEn)
 int wmr_send_packet_init(WMR *wmr) {
     int ret;
 
-    ret = hid_set_output_report(wmr->hid, PATH_IN, PATHLEN, (char*)INIT_PACKET1, sizeof(INIT_PACKET1));
-    if (ret != HID_RET_SUCCESS) 
-    {
-		if( wmr->debugEn > 0 )
-		{
-			sprintf (err_string, WMR_C_TXT_2, ret);
-			syslog_msg (wmr->syslogEn, err_string);
-		}
-
-		return WMR_EXIT_NORMAL;
-    }
-
-    ret = hid_set_output_report(wmr->hid, PATH_IN, PATHLEN, (char*)INIT_PACKET2, sizeof(INIT_PACKET2));
-    if (ret != HID_RET_SUCCESS) 
-    {
-		if( wmr->debugEn > 0 )
-		{
-			sprintf (err_string, WMR_C_TXT_2, ret);
-			syslog_msg (wmr->syslogEn, err_string);
-		}
-
-		return WMR_EXIT_NORMAL;
-    }
-
-    ret = hid_set_output_report(wmr->hid, PATH_OUT, PATHLEN, (char*)INIT_PACKET1, sizeof(INIT_PACKET1));
-    if (ret != HID_RET_SUCCESS) 
-    {
-		if( wmr->debugEn > 0 )
-		{
-			sprintf (err_string, WMR_C_TXT_2, ret);
-			syslog_msg (wmr->syslogEn, err_string);
-		}
-
-		return WMR_EXIT_NORMAL;
-    }
-
-    ret = hid_set_output_report(wmr->hid, PATH_OUT, PATHLEN, (char*)INIT_PACKET2, sizeof(INIT_PACKET2));
+    //ret = hid_set_output_report(wmr->hid, PATH_OUT, PATHLEN, (char*)INIT_PACKET1, sizeof(INIT_PACKET1));
+    ret = hid_set_feature_report(wmr->hid, PATH_OUT, PATHLEN, (char*)INIT_PACKET1, sizeof(INIT_PACKET1));
     if (ret != HID_RET_SUCCESS) 
     {
 		if( wmr->debugEn > 0 )
