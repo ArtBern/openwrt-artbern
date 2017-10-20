@@ -6,7 +6,7 @@
  USBFLAGS := $(shell libusb-config --cflags)
 -USBLIBS  := $(shell libusb-config --libs)
 +#USBLIBS  := $(shell libusb-config --libs)
-+USBLIBS= -L$(STAGING_DIR)/opt/lib -lusb
++USBLIBS= -L$(STAGING_DIR)opt/lib -lusb
  EXE_SUFFIX=
  
  
