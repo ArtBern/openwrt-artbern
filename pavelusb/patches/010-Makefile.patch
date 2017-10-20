@@ -19,8 +19,8 @@
  DEBUGFLAGS=
 -CFLAGS=		-O -Wall $(USBFLAGS) $(DEBUGFLAGS) -I$(SRCDIR)
 -LIBS=		$(USBLIBS)
-+#CFLAGS=		-O -Wall $(USBFLAGS) $(DEBUGFLAGS) -I$(SRCDIR)
-+LIBS+=		$(USBLIBS)
++CFLAGS+=		-O $(USBFLAGS) $(DEBUGFLAGS) -I$(SRCDIR)
++LIBS+=		$(USBLIBS) -Wl,-rpath-link=$(STAGING_DIR)/opt/lib
  OBJ=		$(addsuffix .o,$(SRCS))
 -
 -
