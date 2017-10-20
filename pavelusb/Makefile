@@ -13,17 +13,17 @@ PKG_VERSION:=2.1.00
 PKG_RELEASE:=1
 
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_REV:=87cf2d92c7b64b02f870b86a55ee9c970c29abdd
-PKG_SOURCE_URL:=https://github.com/pavel-a/usb-relay-hid
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_VERSION:=$(PKG_REV)
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+#PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+#PKG_REV:=87cf2d92c7b64b02f870b86a55ee9c970c29abdd
+#PKG_SOURCE_URL:=https://github.com/pavel-a/usb-relay-hid
+#PKG_SOURCE_PROTO:=git
+#PKG_SOURCE_VERSION:=$(PKG_REV)
+#PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
-#include $(INCLUDE_DIR)/cmake.mk
+include $(INCLUDE_DIR)/cmake.mk
 
 define Package/pavelusb
 	SECTION:=utils
@@ -38,15 +38,15 @@ define Package/pavelusb/description
  This project provides open-source API for low-cost USB HID relays (search on eBay for "5V USB Relay Programmable Computer Control For Smart Home").
 endef
 
-# define Build/Prepare
+ define Build/Prepare
 	# mkdir -p $(PKG_BUILD_DIR)
-	# $(CP) $(PKG_SOURCE_DIR)/src/* $(PKG_BUILD_DIR)/
+	 $(CP) $(PKG_SOURCE_DIR)/src/* $(PKG_BUILD_DIR)
 	# rm -f $(PKG_BUILD_DIR)/CMakeCache.txt
 	# rm -fR $(PKG_BUILD_DIR)/CMakeFiles
 	# rm -f $(PKG_BUILD_DIR)/Makefile
 	# rm -f $(PKG_BUILD_DIR)/cmake_install.cmake
 	# rm -f $(PKG_BUILD_DIR)/progress.make
-# endef
+ endef
 
 # define Build/Configure
 	# IN_OPENWRT=1 \
