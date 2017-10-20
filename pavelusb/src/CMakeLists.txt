@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(pavelusb)
+project(hidusb-relay)
 
 if(WIN32)
     message("Building against hid")
