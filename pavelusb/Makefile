@@ -20,7 +20,7 @@ PKG_RELEASE:=1
 #PKG_SOURCE_VERSION:=$(PKG_REV)
 #PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 
-PKG_INSTALL:=1
+#PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
@@ -40,7 +40,7 @@ endef
 
  define Build/Prepare
 	# mkdir -p $(PKG_BUILD_DIR)
-	 $(CP) $(PKG_SOURCE_DIR)/src/* $(PKG_BUILD_DIR)
+	 $(CP) ./src/* $(PKG_BUILD_DIR)
 	# rm -f $(PKG_BUILD_DIR)/CMakeCache.txt
 	# rm -fR $(PKG_BUILD_DIR)/CMakeFiles
 	# rm -f $(PKG_BUILD_DIR)/Makefile
@@ -70,7 +70,7 @@ endef
 
 define Build/Compile
 	$(MAKE) -C $(PKG_BUILD_DIR)
-	$(STRIP) $(PKG_BUILD_DIR)/pavelusb
+#	$(STRIP) $(PKG_BUILD_DIR)/pavelusb
 endef
 
 define Package/pavelusb/install
