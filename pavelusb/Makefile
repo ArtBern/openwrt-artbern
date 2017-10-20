@@ -23,6 +23,7 @@ PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/cmake.mk
 
 define Package/pavelusb
 	SECTION:=utils
@@ -39,7 +40,7 @@ endef
 
 define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
-	$(CP) ./commandline/* $(PKG_BUILD_DIR)/
+	$(CP) $(PKG_SOURCE_DIR)/src/* $(PKG_BUILD_DIR)/
 	rm -f $(PKG_BUILD_DIR)/CMakeCache.txt
 	rm -fR $(PKG_BUILD_DIR)/CMakeFiles
 	rm -f $(PKG_BUILD_DIR)/Makefile
@@ -63,6 +64,7 @@ define Build/Configure
 	TARGET_CPPFLAGS="$(TARGET_CPPFLAGS)" \
 	TARGET_CFLAGS="$(TARGET_CFLAGS)" \
 	TARGET_LDFLAGS="$(TARGET_LDFLAGS)" \
+	ls $(PKG_BUILD_DIR) \
 	cmake $(PKG_BUILD_DIR)/CMakeLists.txt
 endef
 
