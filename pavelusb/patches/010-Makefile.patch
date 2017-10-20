@@ -36,10 +36,10 @@
 +	
 +install:
 +			install ./usbrelay-cmd /usr/local/bin
-+			install ./usb_relay_device.so /usr/local/bin
-+uninstall:
-+			rm -rf /usr/local/bin/usbrelay-cmd	
-+			rm -rf /usr/local/bin/usb_relay_device.so	
++#			install ./usb_relay_device.so /usr/local/bin
++#uninstall:
++#			rm -rf /usr/local/bin/usbrelay-cmd	
++#			rm -rf /usr/local/bin/usb_relay_device.so	
  
  #
  # Shared library
