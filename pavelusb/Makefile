@@ -50,9 +50,19 @@ endef
 
 MAKE_PATH:=commandline/makemake
 
+define Build/InstallDev
+	$(INSTALL_DIR) $(1)/opt/include
+	$(CP) $(PKG_INSTALL_DIR)/opt/include/*.h $(1)/opt/include/
+	$(INSTALL_DIR) $(1)/opt/lib
+	$(CP) $(PKG_INSTALL_DIR)/opt/lib/usb_relay_device.{a,la,so*} $(1)/opt/lib/
+	$(INSTALL_DIR) $(1)/opt/lib/pkgconfig
+	$(CP) $(PKG_INSTALL_DIR)/opt/lib/pkgconfig/libhid.pc $(1)/opt/lib/pkgconfig/
+endef
+
 define Package/pavelusb/install
 	$(INSTALL_DIR) $(1)/opt/lib
-	$(CP) $(PKG_INSTALL_DIR)/opt/lib/*.so* $(1)/opt/lib
+	$(CP) $(PKG_INSTALL_DIR)/opt/lib/usb_relay_device.so* $(1)/opt/lib
+	$(INSTALL_DIR) $(1)/opt/bin
 	$(INSTALL_BIN) $(1)/opt/bin
 endef
 

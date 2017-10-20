@@ -34,8 +34,8 @@
  %.c.o:
  	$(CC) $(ARCH_COMPILE) $(CFLAGS) -c $*.c -o $*.o
 +	
-+install:
-+			install ./usbrelay-cmd /usr/local/bin
++#install:
++#			install ./usbrelay-cmd /usr/local/bin
 +#			install ./usb_relay_device.so /usr/local/bin
 +#uninstall:
 +#			rm -rf /usr/local/bin/usbrelay-cmd	
