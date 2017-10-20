@@ -24,5 +24,5 @@ endif()
 add_library(hidusb-relay SHARED ${SOURCES})
 target_link_libraries(hidusb-relay ${LIBRARIES})
 
-add_executable(pavelusb usbrelay-cmd.c)
-target_link_libraries(pavelusb hidusb-relay)
+add_executable(hidusb-relay-cmd usbrelay-cmd.c)
+target_link_libraries(hidusb-relay-cmd hidusb-relay)
