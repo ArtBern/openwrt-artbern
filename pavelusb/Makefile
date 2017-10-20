@@ -43,7 +43,7 @@ endef
 #	--disable-werror \
 #	--without-doxygen \
 
-
+MAKE_PATH:=commandline/makemake
 
 define Build/InstallDev
 	$(INSTALL_DIR) $(1)/opt/include
@@ -52,10 +52,6 @@ define Build/InstallDev
 	$(CP) $(PKG_INSTALL_DIR)/opt/lib/libhid.{a,la,so*} $(1)/opt/lib/
 	$(INSTALL_DIR) $(1)/opt/lib/pkgconfig
 	$(CP) $(PKG_INSTALL_DIR)/opt/lib/pkgconfig/libhid.pc $(1)/opt/lib/pkgconfig/
-endef
-
-define Build/Compile
-	cd $(PKG_BUILD_DIR)/commandline/makemake; $(MAKE) 
 endef
 
 define Package/pavelusb/install
