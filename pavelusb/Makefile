@@ -43,6 +43,11 @@ endef
 #	--disable-werror \
 #	--without-doxygen \
 
+PKG_CONFIGURE_OPTS += \
+		--enable-usb \
+		--with-libusb-config="$(STAGING_DIR)/opt/bin/libusb-config"
+
+
 MAKE_PATH:=commandline/makemake
 
 define Build/InstallDev

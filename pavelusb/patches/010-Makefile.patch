@@ -1,6 +1,6 @@
 --- a/commandline/makemake/Makefile
 +++ b/commandline/makemake/Makefile
-@@ -37,10 +37,10 @@ PROGRAM=	$(CMD_UTILITY)$(EXE_SUFFIX)
+@@ -37,9 +37,9 @@ PROGRAM=	$(CMD_UTILITY)$(EXE_SUFFIX)
  
  all: $(PROGRAM) $(SHRLIB)
  
@@ -8,9 +8,7 @@
 +#CC=		gcc
  DEBUGFLAGS=
 -CFLAGS=		-O -Wall $(USBFLAGS) $(DEBUGFLAGS) -I$(SRCDIR)
--LIBS=		$(USBLIBS)
 +#CFLAGS=		-O -Wall $(USBFLAGS) $(DEBUGFLAGS) -I$(SRCDIR)
-+#LIBS=		$(USBLIBS)
+ LIBS=		$(USBLIBS)
  OBJ=		$(addsuffix .o,$(SRCS))
- 
  
