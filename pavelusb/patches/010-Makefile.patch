@@ -17,8 +17,9 @@
 -CC=		gcc
 +#CC=		gcc
  DEBUGFLAGS=
- CFLAGS=		-O -Wall $(USBFLAGS) $(DEBUGFLAGS) -I$(SRCDIR)
+-CFLAGS=		-O -Wall $(USBFLAGS) $(DEBUGFLAGS) -I$(SRCDIR)
 -LIBS=		$(USBLIBS)
++#CFLAGS=		-O -Wall $(USBFLAGS) $(DEBUGFLAGS) -I$(SRCDIR)
 +LIBS+=		$(USBLIBS)
  OBJ=		$(addsuffix .o,$(SRCS))
 -
