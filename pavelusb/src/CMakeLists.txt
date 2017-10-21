@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(hidusb-relay)
+project(pavelusb)
 
 if(WIN32)
     message("Building against hid")
@@ -26,3 +26,6 @@ target_link_libraries(hidusb-relay ${LIBRARIES})
 
 add_executable(hidusb-relay-cmd usbrelay-cmd.c)
 target_link_libraries(hidusb-relay-cmd hidusb-relay)
+
+install(TARGETS hidusb-relay LIBRARY DESTINATION lib)
+

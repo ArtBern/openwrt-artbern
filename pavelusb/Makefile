@@ -28,7 +28,7 @@ include $(INCLUDE_DIR)/cmake.mk
 define Package/pavelusb
 	SECTION:=utils
 	CATEGORY:=Utilities
-	DEPENDS:=+libusb-compat
+	DEPENDS:=+libusb-compat +libhidusb-relay
 	TITLE:=clone of usb
 	URL:=https://github.com/pavel-a/usb-relay-hid
 	MAINTAINER:=Artem Bernadsky
@@ -68,14 +68,16 @@ endef
 	# cmake $(PKG_BUILD_DIR)/CMakeLists.txt
 # endef
 
-define Build/Compile
-	$(MAKE) -C $(PKG_BUILD_DIR)
+#define Build/Compile
+#	$(MAKE) -C $(PKG_BUILD_DIR)
 #	$(STRIP) $(PKG_BUILD_DIR)/pavelusb
-endef
+#endef
 
 define Package/pavelusb/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/hidusb-relay-cmd $(1)/usr/bin/
+	$(INSTALL_DIR) $(1)/opt/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/hidusb-relay-cmd $(1)/opt/bin/
+	$(INSTALL_DIR) $(1)/opt/lib
+	$(CP) $(PKG_BUILD_DIR)/libhidusb-relay.so $(1)/opt/lib/
 endef
 
 #CONFIGURE_ARGS += \
