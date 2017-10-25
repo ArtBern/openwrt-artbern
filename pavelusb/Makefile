@@ -28,7 +28,7 @@ include $(INCLUDE_DIR)/cmake.mk
 define Package/pavelusb
 	SECTION:=utils
 	CATEGORY:=Utilities
-	DEPENDS:=+libusb-compat +libhidusb-relay
+	DEPENDS:=+libusb-compat
 	TITLE:=clone of usb
 	URL:=https://github.com/pavel-a/usb-relay-hid
 	MAINTAINER:=Artem Bernadsky
